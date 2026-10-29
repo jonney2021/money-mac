@@ -1,0 +1,9 @@
+{
+  "provider": "outlook",
+  "email": "YOUR_EMAIL@outlook.com",
+  "client_id": "YOUR_MICROSOFT_PUBLIC_CLIENT_APPLICATION_ID",
+  "allowed_senders": ["EXACT_BANK_ALERT_SENDER@example.com"],
+  "output_file": "C:\\Users\\YOUR_WINDOWS_USERNAME\\iCloudDrive\\Hearth\\mail.hearthfeed",
+  "poll_seconds": 300,
+  "lookback_days": 7
+}

@@ -1,0 +1,16 @@
+.DS_Store
+build/
+.build/
+.swiftpm/
+**/xcuserdata/
+**/__pycache__/
+.venv/
+*.hearth
+*.hearthfeed
+*.sqlite*
+*.csv
+config.json
+.env
+*.p12
+*.mobileprovision
+*.key

@@ -1,0 +1,41 @@
+name: Build iPhone App
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+    paths: ['Sources/**', 'Tests/**', 'Scripts/**', 'Resources/**', 'Package.swift', '.github/workflows/ios.yml', 'Companion/**']
+permissions:
+  contents: read
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Show Xcode version
+        run: xcodebuild -version
+      - name: Validate generated project
+        run: python3 Scripts/check_project.py
+      - name: Core tests
+        run: swift test
+      - name: Windows companion unit tests
+        run: |
+          python3 -m venv /tmp/hearth-test
+          /tmp/hearth-test/bin/pip install 'cryptography>=44,<51'
+          /tmp/hearth-test/bin/python -m unittest discover -s Companion -p 'test_*.py' -v
+      - name: Build unsigned iOS device app
+        run: bash Scripts/build_ios.sh
+      - name: Upload IPA (requires local signing before use)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Hearth-iPhone-unsigned
+          path: |
+            build/Hearth-unsigned.ipa
+            build/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 14
